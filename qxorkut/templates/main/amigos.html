@@ -1,0 +1,15 @@
+{% for amigo in amigos %}
+	<a href="/qxut/perfil/{{amigo.id}}" class="hiddenlink ripple">
+		<div class="friend-body">
+			{% if amigo.foto %}
+				<div class="userimgdiv" style="background-image: url({{amigo.foto.url}})">
+				</div>
+			{% else %}
+				<div class="userimgdiv" style="background-image: url(static/img/defuser.png)">
+				</div>
+			{% endif %}
+			<label class="username">{{amigo.nome}} {{amigo.sobrenome}}</label>
+			<!--<label class="useronline"> - Online</label>-->
+		</div>
+	</a>
+{% endfor %}

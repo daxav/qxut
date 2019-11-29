@@ -1,0 +1,15 @@
+{% extends "main/base.html" %}
+
+{% block headercontent %}
+{% endblock %}
+
+{% block center %}
+
+	<form method="post" action="/qxut/editar_perfil" enctype="multipart/form-data">
+		{% csrf_token %}
+
+		{{form}}
+		<button type="submit" class="materialbuttondark ripple">Salvar</button>
+	</form>
+
+{% endblock %}

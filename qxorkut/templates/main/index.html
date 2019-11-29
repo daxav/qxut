@@ -1,0 +1,159 @@
+{% extends "main/base.html" %}
+
+{% block currentuser %}
+	<div class="currentuser">
+		{% if userimage %}
+			<div class="userimgdiv" style="background-image: url({{userimage.url}})"></div>
+		{% else %}
+			<div class="userimgdiv" style="background-image: url(/static/img/defuser.png)"></div>
+		{% endif %}
+		<label>{{username}}</label>
+	</div>
+{% endblock %}
+	
+{% block left %}
+	<div class="pesquisapane">
+		<input id="comunidadespesquisa" class="commentinput" type="text" placeholder="Procurar comunidades...">
+	</div>
+
+	<div style="display: flex; flex-direction: column; margin-bottom: 10px;">
+		<label id="comunidadeslabel" class="amigoslabel">Comunidades</label>
+		<button onclick="window.location.href='/qxut/nova_comunidade/'" class="materialbuttondark ripple">Criar comunidade</button>
+	</div>
+
+	<div id="communitycontainer" class="friendscontainer">
+		{% include "main/comunidades.html" %}
+	</div>
+{% endblock%}
+
+{% block center %}
+
+	<div class="postmake">
+		<form id="postmakeform" action="#" method="POST" action="/qxut/">
+			{% csrf_token %}
+
+			{{ form.non_field_errors }}
+			<div style="display: flex; flex-direction: column;">
+				<div class="fieldWrapper">
+				    {{ form.text.errors }}
+				    <label for="{{ form.text.id_for_label }}"></label>
+				    {{ form.text }}
+		    	</div>
+
+				<div style="flex-basis: 80%; display: flex; flex-direction: row; align-items: center;">
+		    		<div class="fieldWrapper">
+				        {{ form.anexo.errors }}
+				        <label for="{{ form.anexo.id_for_label }}"></label>
+				        {{ form.anexo }}
+		    		</div>
+
+		    		<input id="postmakesender" style="flex-basis: 20%; max-height: 30px; max-width: 70px; margin-left: auto;" class="materialbuttondark ripple" type="submit" value="Postar">
+				</div>
+			</div>
+			
+		</form>
+	</div>
+
+	<div id="postscontainer">
+		{% include "main/posts.html" %}
+	</div>
+
+{% endblock %}
+
+{% block right %}
+	<div class="pesquisapane">
+		<input id="amigospesquisa" class="commentinput" type="text" placeholder="Procurar pessoas...">
+	</div>
+
+	<div style="display: flex;">
+		<label id="amigoslabel" class="amigoslabel">Amigos</label>
+	</div>
+
+	<div id = "friendscontainer" class="friendscontainer">	
+		{% include "main/amigos.html" %}
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+	    $('#postmakeform').submit(function (e) {
+	        e.preventDefault();
+	        $form = $(this)
+	        var formData = new FormData(this);
+
+	        $.ajax({
+	            url: "/qxut/add_post/",
+	            type: 'POST',
+	            data: formData,
+	            success: function (data) {
+	                document.getElementById('postscontainer').innerHTML = data['response'];
+	                document.getElementById('textoinput').value = '';
+	                document.getElementById('postfileinput').value = '';
+	            },
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	        });
+	    });
+
+	    $("#amigospesquisa").change(function () {
+	    	var token = '{{csrf_token}}';
+	    	var nome =  $("#amigospesquisa").val();
+	    	var formData = new FormData();
+	    	formData.append('nome', nome);
+
+	        $.ajax({
+	            url: "/qxut/busca_amigos/",
+	            type: "POST",
+	            data: formData,
+	            headers: {
+          		 	'X-CSRFToken': token,
+          		},
+	            success: function (data) {
+	                document.getElementById('friendscontainer').innerHTML = data['response'];
+	                if (data['vazio'])
+	                {
+	                	$('#amigoslabel').show();
+	                }
+	                else
+	                {
+	                	$('#amigoslabel').hide();
+	                }
+	            },
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	        });
+	    });
+
+	     $("#comunidadespesquisa").change(function () {
+	    	var token = '{{csrf_token}}';
+	    	var nome =  $("#comunidadespesquisa").val();
+	    	var formData = new FormData();
+	    	formData.append('nome', nome);
+
+	        $.ajax({
+	            url: "/qxut/busca_comunidades/",
+	            type: "POST",
+	            data: formData,
+	            headers: {
+          		 	'X-CSRFToken': token,
+          		},
+	            success: function (data) {
+	                document.getElementById('communitycontainer').innerHTML = data['response'];
+	                if (data['vazio'])
+	                {
+	                	$('#comunidadeslabel').show();
+	                }
+	                else
+	                {
+	                	$('#comunidadeslabel').hide();
+	                }
+	            },
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	        });
+	    });
+ 	 </script>
+{% endblock %}

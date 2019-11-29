@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title%}Qxut{% endblock %}</title>
+
+	<link rel="stylesheet" type="text/css" href="{% block style %}/static/css/style.css{% endblock %}">
+</head>
+<body>
+
+	<header id="mainheader">
+		{% block headertitle %}
+			<img class="titleimage" src="/static/img/defuser.png" alt="Q">
+			<label style="margin-right: auto; margin-top: auto; margin-bottom: auto; font-weight: bold; font-size: 20px;">xut</label>
+		{% endblock %}
+
+		{% block headercontent %}
+			<div style="display: flex;">
+				{% block currentuser %}
+					<div class="currentuser">
+						
+					</div>
+				{% endblock %}
+
+				<div class="container">
+					<ul>
+						<li><button onclick="window.location.href='/qxut/'" class="materialbutton ripple-header">Postagens</button></li>
+						<li><button onclick="window.location.href='/qxut/perfil/{{perfil.id}}'" class="materialbutton ripple-header">Meu Perfil</button></li>
+						<li><button onclick="window.location.href='/qxut/logout'" class="materialbutton ripple-header">Sair</button></li>
+					</ul>
+				</div>
+			</div>
+		{% endblock %}
+	</header><!-- /header -->
+
+	{% block maincontent %}
+		<div id="main-content">
+			<aside id="left-sidebar">
+				{% block left %}
+				
+				{% endblock %}
+			</aside>
+
+			<section id="center-pane">
+				{% block center %}
+				
+				{% endblock %}
+			</section>
+
+			<aside id="right-sidebar">
+				{% block right %}
+				
+				{% endblock %}
+			</aside>
+		</div>
+	{% endblock %}
+
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <!--<script src="{% static 'js/app.js' %}"></script>-->
+    {% block javascript %}{% endblock %}
+</body>
+</html>

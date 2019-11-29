@@ -1,0 +1,86 @@
+{% extends "main/base.html" %}
+
+{% block center %}
+	<div class="perfilbody">
+		{% if perfilsolicitado.foto %}
+			<div class="userimgdivbig" style="margin-bottom: 10px; background-image: url({{perfilsolicitado.foto.url}});"></div>
+		{% else %}
+			<div class="userimgdivbig" style="margin-bottom: 10px; background-image: url(/static/img/defuser.png);"></div>
+		{% endif %}
+
+		<label style="margin-bottom: 10px;">{{perfilsolicitado.nome}}</label>
+		<label style="margin-bottom: 10px; font-size: 13px; font-weight: normal;">{{perfilsolicitado.sobrenome}}</label>
+		
+		{% if postquantidade == 1 %}
+			<label id="countlabel" class="perfilposts">{{postquantidade}} postagem</label>
+		{% else %}
+			<label id="countlabel" class="perfilposts">{{postquantidade}} postagens</label>
+		{% endif%}
+	</div>
+
+	{% if form %}
+		<div class="postmake">
+			<form id="postmakeform" action="#" method="POST" action="/qxut/">
+				{% csrf_token %}
+
+				{{ form.non_field_errors }}
+				<div style="display: flex; flex-direction: column;">
+					<div class="fieldWrapper">
+					    {{ form.text.errors }}
+					    <label for="{{ form.text.id_for_label }}"></label>
+					    {{ form.text }}
+			    	</div>
+
+					<div style="flex-basis: 80%; display: flex; flex-direction: row; align-items: center;">
+			    		<div class="fieldWrapper">
+					        {{ form.anexo.errors }}
+					        <label for="{{ form.anexo.id_for_label }}"></label>
+					        {{ form.anexo }}
+			    		</div>
+
+			    		<input id="postmakesender" style="flex-basis: 20%; max-height: 30px; max-width: 70px; margin-left: auto;" class="materialbuttondark ripple" type="submit" value="Postar">
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	{% endif%}
+
+	<div id="postscontainer">
+		{% include "main/posts.html" %}
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		$('#postmakeform').submit(function (e) {
+	        e.preventDefault();
+	        $form = $(this)
+	        var formData = new FormData(this);
+
+	        $.ajax({
+	            url: "/qxut/comunidade/{{comunidade.id}}",
+	            type: 'POST',
+	            data: formData,
+	            success: function (data) {
+	                document.getElementById('postscontainer').innerHTML = data['response'];
+	                document.getElementById('textoinput').value = '';
+	                document.getElementById('postfileinput').value = '';
+
+	                if (data['count'] == 1)
+	                {
+	                	$("#countlabel").text(data['count'] + ' postagem');
+	                }
+	                else
+	                {
+	                	$("#countlabel").text(data['count'] + ' postagens');
+	                }
+	            },
+	            cache: false,
+	            contentType: false,
+	            processData: false
+	        });
+	    });
+	</script>
+{% endblock %}

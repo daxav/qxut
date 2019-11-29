@@ -1,0 +1,88 @@
+{% extends "main/base.html" %}
+
+{% block right %}
+	<div class="friendscontainer">	
+		{% include "main/amigos.html" %}
+	</div>
+{% endblock %}
+
+{% block center %}
+	<div class="perfilbody">
+		{% if perfilsolicitado.foto %}
+			<div class="userimgdivbig" style="margin-bottom: 10px; background-image: url({{perfilsolicitado.foto.url}});"></div>
+		{% else %}
+			<div class="userimgdivbig" style="margin-bottom: 10px; background-image: url(/static/img/defuser.png);"></div>
+		{% endif %}
+		<label style="margin-bottom: 10px;">{{perfilsolicitado.nome}} {{perfilsolicitado.sobrenome}}</label>
+		
+		{% if postquantidade == 1 %}
+			<label class="perfilposts">{{postquantidade}} postagem</label>
+		{% else %}
+			<label class="perfilposts">{{postquantidade}} postagens</label>
+		{% endif%}
+
+		{% if perfilsolicitado.id != perfil.id %}
+			{% if isamigo %}
+				<button id="botãoseguir" class="materialbutton ripple-header">Seguindo</button>
+			{% else %}
+				<button id="botãoseguir" class="materialbutton ripple-header">Seguir</button>
+			{% endif %}
+		{% endif %}
+	</div>
+
+	<div id="postscontainer">
+		{% include "main/posts.html" %}
+	</div>
+{% endblock %}
+
+{% block left %}
+	<div class="communitycontainer">
+		{% include "main/comunidades.html" %}
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+	    $("#botãoseguir").click(function () {
+	    	var token = '{{csrf_token}}';
+	    	var id = '{{perfilsolicitado.id}}';
+	    	var formData = new FormData();
+	    	formData.append('id', id);
+
+	        if($('#botãoseguir').text() == "Seguir")
+	        {
+	        	$.ajax({
+	            	url: "/qxut/add_amigo/",
+	            	type: "POST",
+	            	data: formData,
+	           		headers: {
+          		 		'X-CSRFToken': token,
+          			},
+	            	success: function (data) {
+	            		$('#botãoseguir').html('Seguindo');
+	            	},
+	            	cache: false,
+	            	contentType: false,
+	            	processData: false
+	        	});
+	        }
+	        else
+	        {
+	        	$.ajax({
+	            	url: "/qxut/rem_amigo/",
+	            	type: "POST",
+	            	data: formData,
+	            	headers: {
+          		 		'X-CSRFToken': token,
+          			},
+	            	success: function (data) {
+	            		$('#botãoseguir').html('Seguir');
+	            	},
+	            	cache: false,
+	            	contentType: false,
+	            	processData: false
+	        	});
+	        }
+	    });
+	</script>
+{% endblock %}

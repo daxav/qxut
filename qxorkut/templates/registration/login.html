@@ -1,0 +1,41 @@
+{% extends "main/base.html" %}
+
+{% block title%}
+	QXut Login
+{% endblock %}
+
+{% block headercontent %}
+{% endblock %}
+
+{% block left %}
+	
+{% endblock %}
+
+{% block center %}
+	<h2>Faça seu login</h2>
+
+	{% load crispy_forms_tags %}
+	<form method="post">
+		{% csrf_token %}
+		
+		{{ form.non_field_errors }}
+   		<div class="fieldWrapper">
+	        {{ form.username.errors }}
+	        <label for="{{ form.username.id_for_label }}">Nome de usuário:</label>
+	        {{ form.username }}
+    	</div>
+   	 	<div class="fieldWrapper">
+	        {{ form.password.errors }}
+	        <label for="{{ form.password.id_for_label }}">Senha:</label>
+	        {{ form.password }}
+    	</div>
+
+    	<p>Não tem uma conta? se cadastre <a href="/qxut/register">aqui</a></p>
+
+		<button type="submit" class="materialbuttondark ripple">Entrar</button>
+	</form>
+{% endblock %}
+
+{% block right %}
+	
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "main/base.html" %}
+
+{% block center %}
+	<form method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{form}}
+		<input type="submit" class="materialbuttondark ripple" style="max-width: 80px;">
+	</form>
+{% endblock %}

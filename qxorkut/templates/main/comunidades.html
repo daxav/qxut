@@ -1,0 +1,14 @@
+{% for comunidade in comunidades %}
+	<a href="/qxut/comunidade/{{comunidade.id}}" class="hiddenlink">
+		<div class=community-body>
+			{% if comunidade.foto %}
+				<img class="communityimage" src="{{comunidade.foto.url}}" alt="not found">
+			{% else %}
+				<img class="communityimage" src="/static/img/defuser.png" alt="not found">
+			{% endif %}
+
+			<label class="communityname">{{comunidade.nome}}</label>
+			<label class="communitydesc">{{comunidade.descricao}}</label>
+		</div>
+	</a>
+{% endfor %}
